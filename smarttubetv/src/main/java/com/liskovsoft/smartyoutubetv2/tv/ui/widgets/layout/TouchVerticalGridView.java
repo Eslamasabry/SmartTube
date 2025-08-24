@@ -70,9 +70,7 @@ public class TouchVerticalGridView extends VerticalGridView {
                 mLastState = newState;
                 
                 // Log scroll state changes for debugging
-                if (Log.isDebugMode()) {
-                    Log.d(TAG, "Scroll state changed: " + newState);
-                }
+                Log.d(TAG, "Scroll state changed: " + newState);
             }
 
             @Override
@@ -80,7 +78,7 @@ public class TouchVerticalGridView extends VerticalGridView {
                 super.onScrolled(recyclerView, dx, dy);
                 
                 // Handle scroll events
-                if (dy != 0 && Log.isDebugMode()) {
+                if (dy != 0) {
                     Log.d(TAG, "Scrolled dy: " + dy + ", state: " + mLastState);
                 }
             }

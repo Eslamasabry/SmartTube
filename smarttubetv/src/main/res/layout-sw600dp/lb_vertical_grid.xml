@@ -30,7 +30,7 @@
     android:paddingTop="@dimen/mobile_content_margin"
     android:paddingBottom="@dimen/mobile_content_margin"
     lb:columnWidth="wrap_content"
-    lb:horizontalSpacing="@dimen/mobile_grid_item_horizontal_spacing"
-    lb:verticalSpacing="@dimen/mobile_grid_item_vertical_spacing"
+     android:horizontalSpacing="@dimen/mobile_grid_item_horizontal_spacing"
+     android:verticalSpacing="@dimen/mobile_grid_item_vertical_spacing"
     lb:numberOfColumns="3"
     style="?attr/itemsVerticalGridStyle"/>
