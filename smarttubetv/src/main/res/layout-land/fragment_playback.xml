@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile landscape playback layout - full screen with overlay controls -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <!-- Original playback fragment for full functionality -->
+    <fragment
+        android:id="@+id/playback_controls_fragment"
+        android:name="com.liskovsoft.smartyoutubetv2.tv.ui.playback.PlaybackFragment"
+        android:tag="@string/playback_tag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Mobile overlay controls for landscape -->
+    <LinearLayout
+        android:id="@+id/mobile_overlay_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="@drawable/gradient_overlay_bottom"
+        android:paddingTop="32dp"
+        android:paddingBottom="@dimen/mobile_playback_controls_margin"
+        android:paddingStart="@dimen/mobile_content_margin"
+        android:paddingEnd="@dimen/mobile_content_margin"
+        android:visibility="gone">
+
+        <!-- Progress bar -->
+        <SeekBar
+            android:id="@+id/mobile_landscape_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mobile_playback_progress_height"
+            android:layout_marginBottom="@dimen/mobile_content_margin" />
+
+        <!-- Control buttons and time in single row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Current time -->
+            <TextView
+                android:id="@+id/mobile_landscape_current_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/mobile_subtitle_text_size"
+                android:layout_marginEnd="@dimen/mobile_content_margin" />
+
+            <!-- Control buttons centered -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Previous button -->
+                <ImageButton
+                    android:id="@+id/mobile_landscape_previous_button"
+                    android:layout_width="@dimen/mobile_playback_button_size"
+                    android:layout_height="@dimen/mobile_playback_button_size"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_skip_previous"
+                    android:contentDescription="@string/previous"
+                    android:scaleType="centerInside"
+                    android:layout_marginEnd="@dimen/mobile_button_margin" />
+
+                <!-- Rewind button -->
+                <ImageButton
+                    android:id="@+id/mobile_landscape_rewind_button"
+                    android:layout_width="@dimen/mobile_playback_button_size"
+                    android:layout_height="@dimen/mobile_playback_button_size"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_fast_rewind"
+                    android:contentDescription="@string/rewind"
+                    android:scaleType="centerInside"
+                    android:layout_marginEnd="@dimen/mobile_button_margin" />
+
+                <!-- Play/Pause button -->
+                <ImageButton
+                    android:id="@+id/mobile_landscape_play_pause_button"
+                    android:layout_width="@dimen/mobile_playback_button_size"
+                    android:layout_height="@dimen/mobile_playback_button_size"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_play_arrow"
+                    android:contentDescription="@string/play_pause"
+                    android:scaleType="centerInside"
+                    android:layout_marginEnd="@dimen/mobile_button_margin" />
+
+                <!-- Fast forward button -->
+                <ImageButton
+                    android:id="@+id/mobile_landscape_fast_forward_button"
+                    android:layout_width="@dimen/mobile_playback_button_size"
+                    android:layout_height="@dimen/mobile_playback_button_size"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_fast_forward"
+                    android:contentDescription="@string/fast_forward"
+                    android:scaleType="centerInside"
+                    android:layout_marginEnd="@dimen/mobile_button_margin" />
+
+                <!-- Next button -->
+                <ImageButton
+                    android:id="@+id/mobile_landscape_next_button"
+                    android:layout_width="@dimen/mobile_playback_button_size"
+                    android:layout_height="@dimen/mobile_playback_button_size"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_skip_next"
+                    android:contentDescription="@string/next"
+                    android:scaleType="centerInside" />
+
+            </LinearLayout>
+
+            <!-- Total time -->
+            <TextView
+                android:id="@+id/mobile_landscape_total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/mobile_subtitle_text_size"
+                android:layout_marginStart="@dimen/mobile_content_margin" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

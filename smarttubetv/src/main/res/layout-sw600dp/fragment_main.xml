@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tablet layout with side navigation and larger content area -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <!-- Side navigation panel for tablets -->
+    <LinearLayout
+        android:id="@+id/tablet_side_navigation"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp">
+
+        <!-- Header area -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mobile_toolbar_height"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/mobile_content_margin"
+            android:paddingEnd="@dimen/mobile_content_margin">
+
+            <!-- App logo/icon -->
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/app_icon"
+                android:layout_marginEnd="@dimen/mobile_content_margin" />
+
+            <!-- App title -->
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/app_name"
+                android:textSize="@dimen/mobile_title_text_size"
+                android:textColor="?android:attr/textColorPrimary"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+        <!-- Navigation menu items -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/mobile_content_margin">
+
+                <!-- Navigation items would be added here programmatically -->
+                <!-- For now, we'll keep it simple -->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- Search button at bottom -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/mobile_content_margin">
+
+            <ImageButton
+                android:id="@+id/tablet_search_button"
+                android:layout_width="@dimen/mobile_touch_target_size"
+                android:layout_height="@dimen/mobile_touch_target_size"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/action_search"
+                android:contentDescription="@string/action_search"
+                android:scaleType="centerInside" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/mobile_content_margin"
+                android:text="@string/action_search"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="@dimen/mobile_body_text_size" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Main content area -->
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <!-- Browse fragment with optimized spacing for tablets -->
+        <fragment
+            android:id="@+id/main_frame"
+            android:name="com.liskovsoft.smartyoutubetv2.tv.ui.browse.BrowseFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/mobile_content_margin" />
+
+    </FrameLayout>
+
+</LinearLayout>

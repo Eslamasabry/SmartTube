@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mobile-specific strings -->
+    <string name="menu_button">Menu</string>
+    <string name="action_search">Search</string>
+    <string name="previous">Previous</string>
+    <string name="rewind">Rewind</string>
+    <string name="play_pause">Play/Pause</string>
+    <string name="fast_forward">Fast Forward</string>
+    <string name="next">Next</string>
+    <string name="fullscreen">Fullscreen</string>
+    
+    <!-- Mobile navigation -->
+    <string name="home">Home</string>
+    <string name="categories">Categories</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Mobile accessibility -->
+    <string name="open_navigation_drawer">Open navigation drawer</string>
+    <string name="close_navigation_drawer">Close navigation drawer</string>
+    <string name="video_controls">Video controls</string>
+    <string name="seek_bar">Seek bar</string>
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mobile-specific dimensions for touch-friendly interfaces -->
+    
+    <!-- Touch-friendly card sizes for mobile -->
+    <dimen name="card_width_mobile">160dp</dimen>
+    <dimen name="card_height_mobile">90dp</dimen>
+    
+    <dimen name="shorts_card_width_mobile">100dp</dimen>
+    <dimen name="shorts_card_height_mobile">180dp</dimen>
+    
+    <!-- Touch-friendly button sizes -->
+    <dimen name="mobile_touch_target_size">48dp</dimen>
+    <dimen name="mobile_button_padding">12dp</dimen>
+    <dimen name="mobile_button_margin">8dp</dimen>
+    
+    <!-- Mobile-specific margins and spacing -->
+    <dimen name="mobile_content_margin">16dp</dimen>
+    <dimen name="mobile_item_spacing">12dp</dimen>
+    <dimen name="mobile_edge_margin">16dp</dimen>
+    
+    <!-- Mobile grid spacing -->
+    <dimen name="mobile_grid_item_horizontal_spacing">8dp</dimen>
+    <dimen name="mobile_grid_item_vertical_spacing">8dp</dimen>
+    
+    <!-- Mobile text sizes -->
+    <dimen name="mobile_title_text_size">18sp</dimen>
+    <dimen name="mobile_subtitle_text_size">14sp</dimen>
+    <dimen name="mobile_body_text_size">16sp</dimen>
+    
+    <!-- Mobile navigation heights -->
+    <dimen name="mobile_navigation_height">56dp</dimen>
+    <dimen name="mobile_toolbar_height">56dp</dimen>
+    
+    <!-- Mobile search bar dimensions -->
+    <dimen name="mobile_search_bar_height">48dp</dimen>
+    <dimen name="mobile_search_bar_margin">8dp</dimen>
+    
+    <!-- Mobile playback controls -->
+    <dimen name="mobile_playback_button_size">48dp</dimen>
+    <dimen name="mobile_playback_progress_height">4dp</dimen>
+    <dimen name="mobile_playback_controls_margin">16dp</dimen>
+</resources>
