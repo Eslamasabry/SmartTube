@@ -25,6 +25,8 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.ui.common.MobileFriendlyActivity;
+import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.gestures.MobileGestureHandler;
+import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.animations.MobileAnimationHelper;
 
 /**
  * Loads PlaybackFragment and delegates input from a game controller.
@@ -33,7 +35,7 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.common.MobileFriendlyActivity;
  * For more information on game controller capabilities with leanback, review the
  * <a href="https://developer.android.com/training/game-controllers/controller-input.html">docs</href>.
  */
-public class PlaybackActivity extends MobileFriendlyActivity {
+public class PlaybackActivity extends MobileFriendlyActivity implements MobileGestureHandler.SwipeListener {
     private static final String TAG = PlaybackActivity.class.getSimpleName();
     private static final float GAMEPAD_TRIGGER_INTENSITY_ON = 0.5f;
     // Off-condition slightly smaller for button debouncing.
@@ -45,6 +47,7 @@ public class PlaybackActivity extends MobileFriendlyActivity {
     // Mobile UI elements
     private View mMobileOverlayControls;
     private boolean mMobileControlsVisible = false;
+    private MobileGestureHandler mGestureHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class PlaybackActivity extends MobileFriendlyActivity {
         // Initialize mobile controls if on mobile device
         if (isMobileDevice()) {
             initializeMobileControls();
+            setupGestureNavigation();
         }
     }
     
@@ -197,11 +201,11 @@ public class PlaybackActivity extends MobileFriendlyActivity {
     private void showMobileControls() {
         View portraitControls = findViewById(R.id.mobile_playback_controls);
         if (portraitControls != null) {
-            portraitControls.setVisibility(View.VISIBLE);
+            MobileAnimationHelper.slideInFromBottom(portraitControls);
         }
         
         if (mMobileOverlayControls != null && isLandscape()) {
-            mMobileOverlayControls.setVisibility(View.VISIBLE);
+            MobileAnimationHelper.fadeIn(mMobileOverlayControls);
             mMobileControlsVisible = true;
         }
     }
@@ -211,7 +215,7 @@ public class PlaybackActivity extends MobileFriendlyActivity {
      */
     private void hideMobileControls() {
         if (mMobileOverlayControls != null && isLandscape()) {
-            mMobileOverlayControls.setVisibility(View.GONE);
+            MobileAnimationHelper.fadeOut(mMobileOverlayControls);
             mMobileControlsVisible = false;
         }
     }
@@ -226,6 +230,19 @@ public class PlaybackActivity extends MobileFriendlyActivity {
             } else {
                 showMobileControls();
             }
+        }
+    }
+    
+    /**
+     * Setup gesture navigation for playback
+     */
+    private void setupGestureNavigation() {
+        mGestureHandler = new MobileGestureHandler(this, this);
+        
+        // Attach gesture handler to the video surface
+        View videoSurface = findViewById(android.R.id.content);
+        if (videoSurface != null) {
+            mGestureHandler.attachToView(videoSurface);
         }
     }
     
@@ -274,6 +291,47 @@ public class PlaybackActivity extends MobileFriendlyActivity {
             // Switch back to portrait
             setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+    }
+    
+    // Implement SwipeListener interface for playback gestures
+    @Override
+    public void onSwipeLeft() {
+        // Seek forward in video
+        if (mPlaybackFragment != null) {
+            // TODO: Implement seek forward
+        }
+    }
+    
+    @Override
+    public void onSwipeRight() {
+        // Seek backward in video
+        if (mPlaybackFragment != null) {
+            // TODO: Implement seek backward
+        }
+    }
+    
+    @Override
+    public void onSwipeUp() {
+        // Increase volume
+        // TODO: Implement volume control
+    }
+    
+    @Override
+    public void onSwipeDown() {
+        // Decrease volume
+        // TODO: Implement volume control
+    }
+    
+    @Override
+    public void onTap() {
+        // Toggle playback controls visibility
+        toggleMobileControls();
+    }
+    
+    @Override
+    public void onDoubleTap() {
+        // Toggle play/pause
+        onMobilePlayPauseClicked(null);
     }
 
     @Override

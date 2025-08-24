@@ -7,9 +7,11 @@ import android.widget.TextView;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.ui.common.MobileFriendlyActivity;
+import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.gestures.MobileGestureHandler;
 
-public class BrowseActivity extends MobileFriendlyActivity {
+public class BrowseActivity extends MobileFriendlyActivity implements MobileGestureHandler.SwipeListener {
     private static final String TAG = BrowseActivity.class.getSimpleName();
+    private MobileGestureHandler mGestureHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,7 @@ public class BrowseActivity extends MobileFriendlyActivity {
         // Initialize mobile-specific UI elements if on mobile device
         if (isMobileDevice()) {
             initializeMobileUI();
+            setupGestureNavigation();
         }
     }
 
@@ -97,6 +100,56 @@ public class BrowseActivity extends MobileFriendlyActivity {
     private void onMobileSearchClicked(View view) {
         // TODO: Open search interface
         // This could start the search activity or show search UI
+    }
+    
+    /**
+     * Setup gesture navigation for mobile devices
+     */
+    private void setupGestureNavigation() {
+        mGestureHandler = new MobileGestureHandler(this, this);
+        
+        // Attach gesture handler to the main content area
+        View mainFrame = findViewById(R.id.main_frame);
+        if (mainFrame != null) {
+            mGestureHandler.attachToView(mainFrame);
+        }
+    }
+    
+    // Implement SwipeListener interface
+    @Override
+    public void onSwipeLeft() {
+        // Navigate to next section or page
+        // TODO: Implement navigation logic
+    }
+    
+    @Override
+    public void onSwipeRight() {
+        // Navigate to previous section or show menu
+        // TODO: Implement navigation logic
+    }
+    
+    @Override
+    public void onSwipeUp() {
+        // Scroll up in current view
+        // TODO: Implement scroll logic
+    }
+    
+    @Override
+    public void onSwipeDown() {
+        // Scroll down in current view or pull to refresh
+        // TODO: Implement scroll/refresh logic
+    }
+    
+    @Override
+    public void onTap() {
+        // Toggle mobile controls visibility or perform default action
+        // Already handled by the view's click listeners
+    }
+    
+    @Override
+    public void onDoubleTap() {
+        // Quick action like search or full screen
+        onMobileSearchClicked(null);
     }
 
     @Override
