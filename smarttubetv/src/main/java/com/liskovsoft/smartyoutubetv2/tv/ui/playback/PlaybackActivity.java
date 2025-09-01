@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -20,15 +24,18 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
-import com.liskovsoft.smartyoutubetv2.tv.ui.common.LeanbackActivity;
+import com.liskovsoft.smartyoutubetv2.tv.ui.common.MobileFriendlyActivity;
+import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.gestures.MobileGestureHandler;
+import com.liskovsoft.smartyoutubetv2.tv.ui.widgets.animations.MobileAnimationHelper;
 
 /**
  * Loads PlaybackFragment and delegates input from a game controller.
+ * Enhanced with mobile-friendly touch controls and orientation support.
  * <br>
  * For more information on game controller capabilities with leanback, review the
  * <a href="https://developer.android.com/training/game-controllers/controller-input.html">docs</href>.
  */
-public class PlaybackActivity extends LeanbackActivity {
+public class PlaybackActivity extends MobileFriendlyActivity implements MobileGestureHandler.SwipeListener {
     private static final String TAG = PlaybackActivity.class.getSimpleName();
     private static final float GAMEPAD_TRIGGER_INTENSITY_ON = 0.5f;
     // Off-condition slightly smaller for button debouncing.
@@ -36,6 +43,11 @@ public class PlaybackActivity extends LeanbackActivity {
     private boolean gamepadTriggerPressed = false;
     private PlaybackFragment mPlaybackFragment;
     private boolean mIsBackPressed;
+    
+    // Mobile UI elements
+    private View mMobileOverlayControls;
+    private boolean mMobileControlsVisible = false;
+    private MobileGestureHandler mGestureHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +58,280 @@ public class PlaybackActivity extends LeanbackActivity {
         if (fragment instanceof PlaybackFragment) {
             mPlaybackFragment = (PlaybackFragment) fragment;
         }
+        
+        // Initialize mobile controls if on mobile device
+        if (isMobileDevice()) {
+            initializeMobileControls();
+            setupGestureNavigation();
+        }
+    }
+    
+    @Override
+    protected void onOrientationChanged(int oldOrientation, int newOrientation) {
+        super.onOrientationChanged(oldOrientation, newOrientation);
+        
+        if (isMobileDevice()) {
+            updateMobileControlsForOrientation();
+        }
+    }
+    
+    @Override
+    protected void onMobileLandscapeMode() {
+        super.onMobileLandscapeMode();
+        // Hide mobile overlay controls in landscape for full screen experience
+        if (mMobileOverlayControls != null) {
+            mMobileOverlayControls.setVisibility(View.GONE);
+            mMobileControlsVisible = false;
+        }
+    }
+    
+    @Override
+    protected void onMobilePortraitMode() {
+        super.onMobilePortraitMode();
+        // Show mobile controls in portrait mode
+        showMobileControls();
+    }
+    
+    @Override
+    protected boolean shouldKeepScreenOn() {
+        return true; // Keep screen on during video playback
+    }
+    
+    /**
+     * Initialize mobile-specific playback controls
+     */
+    private void initializeMobileControls() {
+        // Find mobile control elements
+        mMobileOverlayControls = findViewById(R.id.mobile_overlay_controls);
+        
+        // Initialize portrait controls
+        initializePortraitControls();
+        
+        // Initialize landscape controls
+        initializeLandscapeControls();
+        
+        // Set up touch to show/hide controls
+        setupTouchControls();
+    }
+    
+    /**
+     * Initialize portrait mode controls
+     */
+    private void initializePortraitControls() {
+        ImageButton playPauseButton = findViewById(R.id.mobile_play_pause_button);
+        ImageButton previousButton = findViewById(R.id.mobile_previous_button);
+        ImageButton nextButton = findViewById(R.id.mobile_next_button);
+        ImageButton rewindButton = findViewById(R.id.mobile_rewind_button);
+        ImageButton fastForwardButton = findViewById(R.id.mobile_fast_forward_button);
+        ImageButton fullscreenButton = findViewById(R.id.mobile_fullscreen_button);
+        
+        if (playPauseButton != null) {
+            playPauseButton.setOnClickListener(this::onMobilePlayPauseClicked);
+        }
+        if (previousButton != null) {
+            previousButton.setOnClickListener(this::onMobilePreviousClicked);
+        }
+        if (nextButton != null) {
+            nextButton.setOnClickListener(this::onMobileNextClicked);
+        }
+        if (rewindButton != null) {
+            rewindButton.setOnClickListener(this::onMobileRewindClicked);
+        }
+        if (fastForwardButton != null) {
+            fastForwardButton.setOnClickListener(this::onMobileFastForwardClicked);
+        }
+        if (fullscreenButton != null) {
+            fullscreenButton.setOnClickListener(this::onMobileFullscreenClicked);
+        }
+    }
+    
+    /**
+     * Initialize landscape mode controls
+     */
+    private void initializeLandscapeControls() {
+        ImageButton playPauseButton = findViewById(R.id.mobile_landscape_play_pause_button);
+        ImageButton previousButton = findViewById(R.id.mobile_landscape_previous_button);
+        ImageButton nextButton = findViewById(R.id.mobile_landscape_next_button);
+        ImageButton rewindButton = findViewById(R.id.mobile_landscape_rewind_button);
+        ImageButton fastForwardButton = findViewById(R.id.mobile_landscape_fast_forward_button);
+        
+        if (playPauseButton != null) {
+            playPauseButton.setOnClickListener(this::onMobilePlayPauseClicked);
+        }
+        if (previousButton != null) {
+            previousButton.setOnClickListener(this::onMobilePreviousClicked);
+        }
+        if (nextButton != null) {
+            nextButton.setOnClickListener(this::onMobileNextClicked);
+        }
+        if (rewindButton != null) {
+            rewindButton.setOnClickListener(this::onMobileRewindClicked);
+        }
+        if (fastForwardButton != null) {
+            fastForwardButton.setOnClickListener(this::onMobileFastForwardClicked);
+        }
+    }
+    
+    /**
+     * Set up touch controls to show/hide mobile controls
+     */
+    private void setupTouchControls() {
+        View rootView = findViewById(android.R.id.content);
+        if (rootView != null) {
+            rootView.setOnClickListener(v -> toggleMobileControls());
+        }
+    }
+    
+    /**
+     * Update mobile controls based on orientation
+     */
+    private void updateMobileControlsForOrientation() {
+        if (isLandscape()) {
+            // In landscape, use overlay controls that can be hidden
+            hideMobileControls();
+        } else {
+            // In portrait, show controls at bottom
+            showMobileControls();
+        }
+    }
+    
+    /**
+     * Show mobile controls
+     */
+    private void showMobileControls() {
+        View portraitControls = findViewById(R.id.mobile_playback_controls);
+        if (portraitControls != null) {
+            MobileAnimationHelper.slideInFromBottom(portraitControls);
+        }
+        
+        if (mMobileOverlayControls != null && isLandscape()) {
+            MobileAnimationHelper.fadeIn(mMobileOverlayControls);
+            mMobileControlsVisible = true;
+        }
+    }
+    
+    /**
+     * Hide mobile controls
+     */
+    private void hideMobileControls() {
+        if (mMobileOverlayControls != null && isLandscape()) {
+            MobileAnimationHelper.fadeOut(mMobileOverlayControls);
+            mMobileControlsVisible = false;
+        }
+    }
+    
+    /**
+     * Toggle mobile controls visibility
+     */
+    private void toggleMobileControls() {
+        if (isLandscape()) {
+            if (mMobileControlsVisible) {
+                hideMobileControls();
+            } else {
+                showMobileControls();
+            }
+        }
+    }
+    
+    /**
+     * Setup gesture navigation for playback
+     */
+    private void setupGestureNavigation() {
+        mGestureHandler = new MobileGestureHandler(this, this);
+        
+        // Attach gesture handler to the video surface
+        View videoSurface = findViewById(android.R.id.content);
+        if (videoSurface != null) {
+            mGestureHandler.attachToView(videoSurface);
+        }
+    }
+    
+    // Mobile control button handlers
+    private void onMobilePlayPauseClicked(View view) {
+        // TODO: Delegate to playback fragment
+        if (mPlaybackFragment != null) {
+            // mPlaybackFragment.togglePlayPause();
+        }
+    }
+    
+    private void onMobilePreviousClicked(View view) {
+        // TODO: Delegate to playback fragment  
+        if (mPlaybackFragment != null) {
+            // mPlaybackFragment.skipToPrevious();
+        }
+    }
+    
+    private void onMobileNextClicked(View view) {
+        // TODO: Delegate to playback fragment
+        if (mPlaybackFragment != null) {
+            // mPlaybackFragment.skipToNext();
+        }
+    }
+    
+    private void onMobileRewindClicked(View view) {
+        // TODO: Delegate to playback fragment
+        if (mPlaybackFragment != null) {
+            // mPlaybackFragment.rewind();
+        }
+    }
+    
+    private void onMobileFastForwardClicked(View view) {
+        // TODO: Delegate to playback fragment
+        if (mPlaybackFragment != null) {
+            // mPlaybackFragment.fastForward();
+        }
+    }
+    
+    private void onMobileFullscreenClicked(View view) {
+        // Toggle between portrait and landscape for mobile
+        if (isPortrait()) {
+            // Switch to landscape for fullscreen
+            setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            // Switch back to portrait
+            setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+    
+    // Implement SwipeListener interface for playback gestures
+    @Override
+    public void onSwipeLeft() {
+        // Seek forward in video
+        if (mPlaybackFragment != null) {
+            // TODO: Implement seek forward
+        }
+    }
+    
+    @Override
+    public void onSwipeRight() {
+        // Seek backward in video
+        if (mPlaybackFragment != null) {
+            // TODO: Implement seek backward
+        }
+    }
+    
+    @Override
+    public void onSwipeUp() {
+        // Increase volume
+        // TODO: Implement volume control
+    }
+    
+    @Override
+    public void onSwipeDown() {
+        // Decrease volume
+        // TODO: Implement volume control
+    }
+    
+    @Override
+    public void onTap() {
+        // Toggle playback controls visibility
+        toggleMobileControls();
+    }
+    
+    @Override
+    public void onDoubleTap() {
+        // Toggle play/pause
+        onMobilePlayPauseClicked(null);
     }
 
     @Override
